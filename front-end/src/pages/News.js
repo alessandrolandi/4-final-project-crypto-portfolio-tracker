@@ -9,7 +9,7 @@ const News = (props) => {
     useEffect(() => {
         const fetchNews = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/news')
+                const response = await fetch('http://64.23.150.105:5000/api/news')
                 const jsonData = await response.json()
                 setData(jsonData.data)
             } catch (error) {
