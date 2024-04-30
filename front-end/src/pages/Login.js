@@ -29,7 +29,7 @@ const Login = (props) => {
 
         try {
             // POST request to the back-end with the Login
-            const response = await fetch('http://localhost:5000/api/login', {
+            const response = await fetch('http://64.23.150.105:5000/api/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
