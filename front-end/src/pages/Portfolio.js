@@ -62,7 +62,7 @@ const Portfolio = () => {
 
         try {
             const response = await fetch(
-                `http://localhost:5000/api/portfolios/${user.username}`
+                `http://64.23.150.105:5000/api/portfolios/${user.username}`
             )
             const data = await response.json()
             if (Array.isArray(data.portfolios)) {
@@ -129,7 +129,7 @@ const Portfolio = () => {
         try {
             // POST request to the back-end with the Bitcoin address
             const response = await fetch(
-                `http://localhost:5000/api/addWallet`,
+                `http://64.23.150.105:5000/api/addWallet`,
                 {
                     method: 'POST',
                     headers: {
@@ -163,7 +163,7 @@ const Portfolio = () => {
 
         try {
             const response = await fetch(
-                `http://localhost:5000/api/deleteWallet/${user.username}/${portfolioId}`,
+                `http://64.23.150.105:5000/api/deleteWallet/${user.username}/${portfolioId}`,
                 {
                     method: 'DELETE',
                 }
@@ -195,7 +195,7 @@ const Portfolio = () => {
 
         try {
             const response = await fetch(
-                `http://localhost:5000/api/renamePortfolio/${user.username}/${portfolioId}`,
+                `http://64.23.150.105:5000/api/renamePortfolio/${user.username}/${portfolioId}`,
                 {
                     method: 'PUT',
                     headers: {
@@ -244,7 +244,7 @@ const Portfolio = () => {
         try {
             // POST request to the back-end with the Bitcoin address
             const response = await fetch(
-                `http://localhost:5000/api/addNft`,
+                `http://64.23.150.105:5000/api/addNft`,
                 {
                     method: 'POST',
                     headers: {
