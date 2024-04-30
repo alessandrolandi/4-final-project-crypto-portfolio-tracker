@@ -27,7 +27,7 @@ const Home = (props) => {
     useEffect(() => {
         // send the request to the server api, including the Authorization header with our JWT token in it
         axios
-            .get(`http://localhost:5000/api/protected/`, {
+            .get(`http://64.23.150.105:3000/5000/api/protected/`, {
                 headers: { Authorization: `JWT ${jwtToken}` }, // pass the token, if any, to the server
             })
             .then((res) => {
