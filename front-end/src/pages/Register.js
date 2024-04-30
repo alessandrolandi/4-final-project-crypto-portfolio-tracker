@@ -33,7 +33,7 @@ const Register = (props) => {
 
         try {
             // POST request to the back-end with the Registration
-            const response = await fetch('http://localhost:5000/api/register', {
+            const response = await fetch('http://64.23.150.105:5000/api/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
