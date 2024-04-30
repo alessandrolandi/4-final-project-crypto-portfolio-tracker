@@ -24,7 +24,7 @@ const Dashboard = (props) => {
 
         try {
             const response = await fetch(
-                `http://localhost:5000/api/portfolios/${user.username}`
+                `http://64.23.150.105:5000/api/portfolios/${user.username}`
             )
             const data = await response.json()
             if (Array.isArray(data.portfolios)) {
