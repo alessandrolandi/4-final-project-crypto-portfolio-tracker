@@ -136,12 +136,12 @@ const portfolioRouter = () => {
     }
   }
 
-  router.get("/portfolios/:username", async (req, res) => {
+  router.get("/portfolios/:email", async (req, res) => {
     try {
-      const { username } = req.params;
-      const user = await User.findOne({ username: username });
+      const { email } = req.params;
+      const user = await User.findOne({ email });
       if (!user) {
-        console.log("Something went wrong: user not found:", username);
+        console.log("Something went wrong: user not found:", email);
         next();
       }
 
@@ -202,7 +202,7 @@ const portfolioRouter = () => {
 
   router.post("/addWallet", async (req, res) => {
     const {
-      username,
+      email,
       name,
       address,
       platformId,
@@ -222,7 +222,7 @@ const portfolioRouter = () => {
     };
 
     const user = await User.findOneAndUpdate(
-      { username: username },
+      { email: email },
       { $addToSet: { portfolio: newPortfolio } }
     );
 
@@ -236,8 +236,8 @@ const portfolioRouter = () => {
     }
   });
 
-  router.delete("/deleteWallet/:username/:portfolioId", async (req, res) => {
-    const { username, portfolioId } = req.params;
+  router.delete("/deleteWallet/:email/:portfolioId", async (req, res) => {
+    const { email, portfolioId } = req.params;
 
     console.log("Attempting to delete portfolio with ID:", portfolioId);
 
@@ -247,7 +247,7 @@ const portfolioRouter = () => {
 
     try {
       const user = await User.updateOne(
-        { username: username },
+        { email: email },
         { $pull: { portfolio: { portfolioId: portfolioId } } }
       );
       if (user.modifiedCount === 0) {
@@ -265,12 +265,12 @@ const portfolioRouter = () => {
   });
 
   // PUT request to rename portfolio
-  router.put("/renamePortfolio/:username/:portfolioId", async (req, res) => {
-    const { username, portfolioId } = req.params;
+  router.put("/renamePortfolio/:email/:portfolioId", async (req, res) => {
+    const { email, portfolioId } = req.params;
     const { newName } = req.body;
 
     try {
-      const user = await User.findOne({ username });
+      const user = await User.findOne({email: email});
       const portfolio = user.portfolio.find(
         (p) => p.portfolioId === portfolioId
       );
@@ -291,12 +291,12 @@ const portfolioRouter = () => {
   });
 
   // requests for histograph data
-  router.get("/portfolioHistory/:username", async (req, res) => {
-    const { username } = req.params;
+  router.get("/portfolioHistory/:email", async (req, res) => {
+    const { email } = req.params;
     const { range } = req.query; // '30days' or '24hours'
 
     try {
-      const user = await User.findOne({ username });
+      const user = await User.findOne({email: email });
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
@@ -324,7 +324,7 @@ const portfolioRouter = () => {
 });
 
   router.post("/addNFT", async (req, res) => {
-    const { username, address } = req.body;
+    const { email, address } = req.body;
 
     async function getNFTCollection() {
       try {
@@ -346,7 +346,7 @@ const portfolioRouter = () => {
       }
   }
 
-    const user = await User.findOne({username: username});
+    const user = await User.findOne({email: email});
 
     if(!user){
       console.log("Something went wrong: user not found")
@@ -376,13 +376,13 @@ const portfolioRouter = () => {
 
 });
 
-  router.get("/nfts/:username", async (req, res) => {
-    const { username } = req.params;
+  router.get("/nfts/:email", async (req, res) => {
+    const { email } = req.params;
 
     try{
-      const user = await User.findOne({ username: username });
+      const user = await User.findOne({ email: email });
       if (!user) {
-        console.log("Something went wrong: user not found:", username);
+        console.log("Something went wrong: user not found:", email);
         next();
       }
 

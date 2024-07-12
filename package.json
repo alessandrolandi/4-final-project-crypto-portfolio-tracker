@@ -3,10 +3,13 @@
     "@blockfrost/blockfrost-js": "^5.5.0",
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0"
-  }
-    "scripts":{
+  },
+  "scripts": {
     "start": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
     "start:frontend": "cd ./front-end && npm start",
     "start:backend": "cd ./back-end && node server"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
   }
 }

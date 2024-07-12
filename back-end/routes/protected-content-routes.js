@@ -18,7 +18,7 @@ const protectedContentRoutes = () => {
         success: true,
         user: {
           id: req.user.id,
-          username: req.user.username,
+          email: req.user.email,
         },
         message:
           "Congratulations: you have accessed this route because you have a valid JWT token!",

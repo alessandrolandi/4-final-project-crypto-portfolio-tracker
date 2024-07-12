@@ -2,7 +2,7 @@
 
 /* Use the dark blue as the primary background color and orange for highlights */
 .portfolio-container {
-    background-color: #14213d; /* Dark blue background */
+    background-color: #111111; /* Dark blue background */
     color: #ffffff; /* White text for contrast */
     font-family: 'Helvetica Neue', Arial, sans-serif;
     min-height: 100vh;

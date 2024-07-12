@@ -9,15 +9,6 @@ const PortfolioHistorySchema = new Schema({
 });
 
 const UserSchema = new Schema({
-    name: {
-        type: String,
-        required: true,
-    },
-    username: {
-        type: String,
-        unique: true,
-        required: true,
-    },
     email: {
         type: String,
         unique: true,
@@ -60,7 +51,7 @@ UserSchema.methods.generateJWT = function () {
     return jwt.sign(
         {
             id: this._id,
-            username: this.username,
+            email: this.email,
             exp: parseInt(exp.getTime() / 1000),
         },
         process.env.JWT_SECRET
@@ -69,7 +60,7 @@ UserSchema.methods.generateJWT = function () {
 
 UserSchema.methods.toAuthJSON = function () {
     return{
-        username: this.username,
+        email: this.email,
         token: this.generateJWT(),
     }
 }

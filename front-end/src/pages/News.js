@@ -9,7 +9,9 @@ const News = (props) => {
     useEffect(() => {
         const fetchNews = async () => {
             try {
-                const response = await fetch('http://64.23.150.105:5000/api/news')
+                const response = await fetch(
+                    'http://64.23.150.105:5000/api/news'
+                )
                 const jsonData = await response.json()
                 setData(jsonData.data)
             } catch (error) {
@@ -24,7 +26,7 @@ const News = (props) => {
             <div className="news-header">
                 <h2 className="news-title">Latest News</h2>
             </div>
-            <div className="h-[28rem] overflow-y-auto p-1 mt-8">
+            <div className="mt-8 h-[28rem] overflow-y-auto p-1">
                 <div className="overflow-y-auto">
                     {data.map((item, index) => (
                         <ListItem

@@ -52,7 +52,7 @@ const Hamburger = () => {
             </button>
             <div
                 className={`fixed left-0 top-[4rem] h-[calc(100%-4rem)] w-2/3 bg-white pl-5 pt-5 text-black transition-transform duration-300 ease-in-out dark:bg-alt-blue dark:text-white ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
-                style={{ zIndex: 30 }} 
+                style={{ zIndex: 30 }}
             >
                 <Link
                     to="/"
@@ -77,14 +77,6 @@ const Hamburger = () => {
                 >
                     <FontAwesomeIcon icon={faArrowTrendUp} className="mr-2" />{' '}
                     Cryptocurrencies
-                </Link>
-                <Link
-                    to="/about"
-                    className="flex items-center px-4 py-2 text-lg font-medium"
-                    onClick={() => setIsOpen(false)}
-                >
-                    <FontAwesomeIcon icon={faInfoCircle} className="mr-2" />{' '}
-                    About
                 </Link>
             </div>
         </div>

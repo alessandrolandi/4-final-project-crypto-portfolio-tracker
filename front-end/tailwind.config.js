@@ -4,6 +4,9 @@ module.exports = {
     darkMode: false,
     theme: {
         extend: {
+            fontFamily: {
+                titillium: ['Titillium Web'],
+            },
             colors: {
                 'orange-dark': '#DE8A02',
                 'orange-light': '#F29602',

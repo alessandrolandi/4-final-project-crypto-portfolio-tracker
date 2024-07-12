@@ -10,14 +10,12 @@ const authenticationRouter = () => {
   // a route to handle user signup requests to /api/register
   router.post("/register", async (req, res, next) => {
     // console.log(`Incoming signup data: ${JSON.stringify(req.body, null, 0)}`)
-    // grab the username and password from the POST body
-      const name = req.body.name;
-      const username = req.body.username;
+    // grab the email and password from the POST body
       const email = req.body.email;
       const password = req.body.password;
 
-    if (!username || !password) {
-      // no username or password received in the POST body... send an error
+    if (!email || !password) {
+      // no email or password received in the POST body... send an error
       res.status(401).json({
         success: false,
         message: `No username or password supplied.`,
@@ -27,7 +25,7 @@ const authenticationRouter = () => {
 
     // try to create a new user
     try {
-      const user = await new User({ name, username, email, password}).save();
+      const user = await new User({ email, password}).save();
       // user saved successfully... send a success response
       console.error(`New user: ${user}`);
       const token = user.generateJWT(); // generate a signed token
@@ -35,7 +33,7 @@ const authenticationRouter = () => {
         success: true,
         message: "User saved successfully.",
         token: token,
-        username: user.username,
+        email: user.email,
       }); // send the token to the client to store
       next();
     } catch (err) {
@@ -53,21 +51,20 @@ const authenticationRouter = () => {
   // a route to handle login attempts requested to /api/login
   router.post("/login", async function (req, res, next) {
     // grab the name and password that were submitted as POST body data
-    const username = req.body.username;
+    const email = req.body.email;
     const password = req.body.password;
-    // console.log(`${username}, ${password}`)
 
-    if (!username || !password) {
+    if (!email || !password) {
       // no username or password received in the POST body... send an error
       res
         .status(401)
-        .json({ success: false, message: `No username or password supplied.` });
+        .json({ success: false, message: `No email or password supplied.` });
       next();
     }
 
     // find this user in the database
     try {
-      const user = await User.findOne({ username: username }).exec();
+      const user = await User.findOne({ email: email }).exec();
       // check if user was found
       if (!user) {
         console.error(`User not found.`);
@@ -93,7 +90,7 @@ const authenticationRouter = () => {
         success: true,
         message: "User logged in successfully.",
         token: token,
-        username: user.username,
+        email: user.email,
       }); // send the token to the client to store
       next();
     } catch (err) {

@@ -24,17 +24,17 @@ const Portfolio = () => {
     const navigate = useNavigate()
     const user = isLoggedIn ? jwtDecode(jwtToken) : ' '
 
-    //portfolio list table
+    //Portfolio List Table
     const [editingPortfolioId, setEditingPortfolioId] = useState(null)
     const [newPortfolioName, setNewPortfolioName] = useState('')
     const [addressModalOpen, setAddressModalOpen] = useState(false)
     const [fullAddress, setFullAddress] = useState('')
 
-    // histograph
+    // Histograph
     const [totalWorth, setTotalWorth] = useState('0')
     const [timeRange, setTimeRange] = useState('30days') // default range for histograph
 
-    //Portfolio add wallet modal
+    //Portfolio Add Wallet Modal
     const [showAddModal, setShowAddModal] = useState(false)
     const [address, setAddress] = useState('')
     const [walletName, setWalletName] = useState('')
@@ -42,8 +42,11 @@ const Portfolio = () => {
     const [selectedCurrency, setSelectedCurrency] = useState('bitcoin') // btc as default
     const [chartData, setChartData] = useState([])
 
+    const toggleAddModal = () => setShowAddModal(!showAddModal)
+
     //NFT 
     const [showNFTModal, setShowNFTModal] = useState(false)
+    const toggleNFTModal = () => setShowNFTModal(!showNFTModal)
 
     // make platform IDs to abbreviations
     const cryptoAbbreviations = {
@@ -61,8 +64,9 @@ const Portfolio = () => {
         }
 
         try {
+            console.log(`${user.id}`)
             const response = await fetch(
-                `http://64.23.150.105:5000/api/portfolios/${user.username}`
+                `http://localhost:5000/api/portfolios/${user.email}`
             )
             const data = await response.json()
             if (Array.isArray(data.portfolios)) {
@@ -120,7 +124,7 @@ const Portfolio = () => {
 
         const newPortfolio = {
             portfolioId: generateUniqueID(),
-            username: user.username,
+            email: user.email,
             name: walletName,
             platformId: selectedCurrency,
             address: address,
@@ -129,7 +133,7 @@ const Portfolio = () => {
         try {
             // POST request to the back-end with the Bitcoin address
             const response = await fetch(
-                `http://64.23.150.105:5000/api/addWallet`,
+                `http://localhost:5000/api/addWallet`,
                 {
                     method: 'POST',
                     headers: {
@@ -163,7 +167,7 @@ const Portfolio = () => {
 
         try {
             const response = await fetch(
-                `http://64.23.150.105:5000/api/deleteWallet/${user.username}/${portfolioId}`,
+                `http://localhost:5000/api/deleteWallet/${user.email}/${portfolioId}`,
                 {
                     method: 'DELETE',
                 }
@@ -195,7 +199,7 @@ const Portfolio = () => {
 
         try {
             const response = await fetch(
-                `http://64.23.150.105:5000/api/renamePortfolio/${user.username}/${portfolioId}`,
+                `http://localhost:5000/api/renamePortfolio/${user.email}/${portfolioId}`,
                 {
                     method: 'PUT',
                     headers: {
@@ -232,19 +236,17 @@ const Portfolio = () => {
         setTimeRange(e.target.value)
     }
 
-    const toggleAddModal = () => setShowAddModal(!showAddModal)
-
     const handleAddNFT = async (e) => {
         e.preventDefault()
 
         const newPortfolio = {
-            username: user.username,
+            email: user.email,
             address: address,
         }
         try {
             // POST request to the back-end with the Bitcoin address
             const response = await fetch(
-                `http://64.23.150.105:5000/api/addNft`,
+                `http://localhost:5000/api/addNft`,
                 {
                     method: 'POST',
                     headers: {
@@ -266,29 +268,33 @@ const Portfolio = () => {
         setShowNFTModal(false)
     }
 
-    const toggleNFTModal = () => setShowNFTModal(!showNFTModal)
-
     // Define colors for the pie chart
     const COLORS = ['#9B5DE5', '#00F5D4', '#00BBF9', '#21FA90 ', '#F2DD6E']
 
     if (isLoggedIn)
         return (
-            <div className="flex h-screen flex-col items-center overflow-auto bg-white text-black dark:bg-alt-blue dark:text-white">
+            <div className="overflow-auto bg-white font-titillium font-extralight text-black dark:bg-black dark:text-white">
                 <Header />
-                <div className="content mt-16 w-full p-5">
-                    <div className="portfolio-graph">
-                        <h2 className="my-2 text-2xl font-extrabold">
-                            Total Worth
-                        </h2>
-                        <h2 className="my-2 text-xl font-extrabold text-green-400">
+
+                <div
+                    id="CONTAINER!!"
+                    className="mt-16 w-full p-5 md:grid md:h-screen md:grid-cols-6 md:grid-rows-12 md:gap-3"
+                >
+                    <div
+                        id="TotalWorth"
+                        className="flex flex-col items-center justify-center border md:col-start-1 md:col-end-3 md:row-start-1 md:row-end-4"
+                    >
+                        <h2 className="my-2 text-lg">Total Value</h2>
+                        <h2 className="my-2 text-xl text-green-400">
                             ${Number(totalWorth).toLocaleString()}
                         </h2>
                     </div>
-                    <div className="portfolio-graph">
-                        <h2 className="my-2 text-2xl font-extrabold">
-                            Portfolio Composition
-                        </h2>
-                        <ResponsiveContainer width="100%" height={300}>
+                    {/*
+                    <div
+                        id="PieChart"
+                        className="flex flex-col items-center justify-center md:col-span-1 md:row-start-1 md:row-end-4 "
+                    >
+                        <ResponsiveContainer width="100%" height={150}>
                             <PieChart>
                                 <Pie
                                     data={chartData}
@@ -296,9 +302,8 @@ const Portfolio = () => {
                                     nameKey="name"
                                     cx="50%"
                                     cy="50%"
-                                    outerRadius={80}
+                                    outerRadius={50}
                                     fill="#8884d8"
-                                    label={renderCustomLabel}
                                 >
                                     {chartData.map((entry, index) => (
                                         <Cell
@@ -311,11 +316,16 @@ const Portfolio = () => {
                             </PieChart>
                         </ResponsiveContainer>
                     </div>
-
-                    <div className="portfolio-graph space-y-2">
-                        <h2 className="my-2 text-2xl font-extrabold">
-                            Portfolio Performance
-                        </h2>
+*/}
+                    <div
+                        id="LineGraph"
+                        className="flex flex-col items-center justify-center space-y-2 border md:col-start-3 md:col-end-7 md:row-start-1 md:row-end-7"
+                    >
+                        <HistoricalPortfolioGraph
+                            email={user.email}
+                            range={timeRange}
+                            className="z-10"
+                        />
                         <div>
                             <select
                                 className="text-black"
@@ -330,71 +340,106 @@ const Portfolio = () => {
                                 </option>
                             </select>
                         </div>
-                        <HistoricalPortfolioGraph
-                            username={user.username}
-                            range={timeRange}
-                        />
                     </div>
-                </div>
-                <div>
-                    <h2 className="my-2 text-2xl font-extrabold">
-                        Portfolio List
-                    </h2>
-                </div>
-                <div className="mx-5 flex w-screen flex-col items-center px-5 py-2 pb-44 shadow-md">
-                    <table className="w-fit text-left shadow-2xl">
-                        <thead className="bg-orange-light text-white">
-                            <tr>
-                                <th className="rounded-tl-lg p-3 font-semibold">
-                                    Name
-                                </th>
-                                <th className="p-3 font-semibold">Address</th>
-                                <th className="p-3 font-semibold">Balance</th>
-                                <th className="rounded-tr-lg p-3 font-semibold"></th>
-                            </tr>
-                        </thead>
-                        <tbody className="dark:bg-dark-blue">
-                            {portfolios.map((portfolio) => (
-                                <tr
-                                    key={portfolio.portfolioId}
-                                    className="border-b border-gray-700"
-                                >
-                                    <td className="p-3">
-                                        {editingPortfolioId ===
-                                        portfolio.portfolioId ? (
-                                            <input
-                                                type="text"
-                                                value={newPortfolioName}
-                                                onChange={(e) =>
-                                                    setNewPortfolioName(
-                                                        e.target.value
-                                                    )
-                                                }
-                                                onBlur={() =>
-                                                    setEditingPortfolioId(null)
-                                                }
-                                                onKeyDown={(event) => {
-                                                    if (event.key === 'Enter') {
-                                                        handleRenamePortfolio(
-                                                            portfolio.portfolioId,
-                                                            newPortfolioName
+
+                    <div
+                        id="PortfolioList"
+                        className="flex w-full flex-col items-center border md:col-start-3 md:col-end-7 md:row-start-7 md:row-end-12"
+                    >
+                        <table className="w-full text-left">
+                            <thead className="text-black dark:text-white">
+                                <tr>
+                                    <th className="p-3 font-extralight">
+                                        Name
+                                    </th>
+                                    <th className="p-3 font-extralight">
+                                        Address
+                                    </th>
+                                    <th className="p-3 font-extralight">
+                                        Balance
+                                    </th>
+                                    <th className="p-3 font-extralight"></th>
+                                </tr>
+                            </thead>
+                            <tbody className="">
+                                {portfolios.map((portfolio) => (
+                                    <tr
+                                        key={portfolio.portfolioId}
+                                        className="border-b border-gray-700"
+                                    >
+                                        <td className="p-3">
+                                            {editingPortfolioId ===
+                                            portfolio.portfolioId ? (
+                                                <input
+                                                    type="text"
+                                                    value={newPortfolioName}
+                                                    onChange={(e) =>
+                                                        setNewPortfolioName(
+                                                            e.target.value
                                                         )
+                                                    }
+                                                    onBlur={() =>
                                                         setEditingPortfolioId(
                                                             null
                                                         )
                                                     }
-                                                }}
-                                                style={{
-                                                    width: '100%',
-                                                    maxWidth: '200px',
-                                                    color: 'black',
-                                                    backgroundColor: 'white',
-                                                }}
-                                                autoFocus
-                                            />
-                                        ) : (
-                                            <div
+                                                    onKeyDown={(event) => {
+                                                        if (
+                                                            event.key ===
+                                                            'Enter'
+                                                        ) {
+                                                            handleRenamePortfolio(
+                                                                portfolio.portfolioId,
+                                                                newPortfolioName
+                                                            )
+                                                            setEditingPortfolioId(
+                                                                null
+                                                            )
+                                                        }
+                                                    }}
+                                                    style={{
+                                                        width: '100%',
+                                                        maxWidth: '200px',
+                                                        color: 'black',
+                                                        backgroundColor:
+                                                            'white',
+                                                    }}
+                                                    autoFocus
+                                                />
+                                            ) : (
+                                                <div
+                                                    onClick={() => {
+                                                        setEditingPortfolioId(
+                                                            portfolio.portfolioId
+                                                        )
+                                                        setNewPortfolioName(
+                                                            portfolio.name
+                                                        )
+                                                    }}
+                                                >
+                                                    {portfolio.name}
+                                                </div>
+                                            )}
+                                        </td>{' '}
+                                        <td className="p-3">
+                                            <span
                                                 onClick={() => {
+                                                    setFullAddress(
+                                                        portfolio.address
+                                                    )
+                                                    setAddressModalOpen(true)
+                                                }}
+                                                className="cursor-pointer"
+                                            >
+                                                {`${portfolio.address.substring(0, 5)}...${portfolio.address.substring(portfolio.address.length - 4)}`}
+                                            </span>
+                                        </td>
+                                        <td className="p-3">
+                                            {portfolio.balance}
+                                        </td>
+                                        <td className="p-3">
+                                            <DropdownMenu
+                                                onRenameClick={() => {
                                                     setEditingPortfolioId(
                                                         portfolio.portfolioId
                                                     )
@@ -402,71 +447,45 @@ const Portfolio = () => {
                                                         portfolio.name
                                                     )
                                                 }}
-                                            >
-                                                {portfolio.name}
-                                            </div>
-                                        )}
-                                    </td>{' '}
-                                    <td className="p-3">
-                                        <span
-                                            onClick={() => {
-                                                setFullAddress(
-                                                    portfolio.address
-                                                )
-                                                setAddressModalOpen(true)
-                                            }}
-                                            className="cursor-pointer"
-                                        >
-                                            {`${portfolio.address.substring(0, 5)}...${portfolio.address.substring(portfolio.address.length - 4)}`}
-                                        </span>
-                                    </td>
-                                    <td className="p-3">{portfolio.balance}</td>
-                                    <td className="p-3">
-                                        <DropdownMenu
-                                            onRenameClick={() => {
-                                                setEditingPortfolioId(
-                                                    portfolio.portfolioId
-                                                )
-                                                setNewPortfolioName(
-                                                    portfolio.name
-                                                )
-                                            }}
-                                            onDeleteClick={() =>
-                                                handleDeletePortfolio(
-                                                    portfolio.portfolioId
-                                                )
-                                            }
-                                        />
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                                                onDeleteClick={() =>
+                                                    handleDeletePortfolio(
+                                                        portfolio.portfolioId
+                                                    )
+                                                }
+                                            />
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
 
-                    <div className="flex items-center space-x-4 overflow-auto">
-                        <button
-                            className="mt-4 rounded bg-orange-light px-4 py-2 font-semibold text-white hover:bg-orange-dark"
-                            onClick={toggleAddModal}
-                        >
-                            <FontAwesomeIcon icon={faCirclePlus} /> Add Wallet
-                        </button>
-                        <button
-                            onClick={fetchPortfolios}
-                            className="mt-4 rounded bg-gray-500 px-4 py-2 font-semibold text-white hover:bg-gray-700"
-                        >
-                            <FontAwesomeIcon icon={faRotate} /> Refresh
-                            Portfolios
-                        </button>
+                        <div className="flex items-center space-x-4 overflow-auto">
+                            <button
+                                className="mt-4 border px-4 py-2 text-white hover:opacity-50"
+                                onClick={toggleAddModal}
+                            >
+                                Add Wallet
+                            </button>
+                            <button
+                                onClick={fetchPortfolios}
+                                className="mt-4 border px-4 py-2 text-white hover:opacity-50"
+                            >
+                                <FontAwesomeIcon icon={faRotate} />
+                            </button>
+                        </div>
                     </div>
 
-                    <NFTs />
-
-                    <button
-                        className="mt-7 rounded bg-orange-light px-5 py-3 font-semibold text-white hover:bg-orange-dark"
-                        onClick={toggleNFTModal}
-                    >
-                        <FontAwesomeIcon icon={faCirclePlus} /> Add NFT
-                    </button>
+                    <div className="border md:col-start-1 md:col-end-3 md:row-start-4 md:row-end-12">
+                        <div className="mt-5 flex flex-col items-center justify-center">
+                            <button
+                                className="border px-5 py-2 font-extralight text-white hover:opacity-50"
+                                onClick={toggleNFTModal}
+                            >
+                                <h2 className="text-md">Add NFT</h2>
+                            </button>
+                            <NFTs />
+                        </div>
+                    </div>
                 </div>
 
                 {addressModalOpen && (
@@ -567,9 +586,7 @@ const Portfolio = () => {
                                         required
                                     />
                                     <div className="py-2">
-                                        <button type="submit">
-                                            Add NFT
-                                        </button>
+                                        <button type="submit">Add NFT</button>
                                     </div>
                                 </form>
                             </div>
@@ -591,7 +608,7 @@ const NFTs = (props) => {
         const fetchNFTs = async () => {
             try {
                 const response = await fetch(
-                    `http://localhost:5000/api/nfts/${user.username}`
+                    `http://localhost:5000/api/nfts/${user.email}`
                 )
                 const data = await response.json()
                 if (Array.isArray(data)) {
@@ -610,17 +627,11 @@ const NFTs = (props) => {
     }, [])
 
     return (
-        <div className="rounded-xl dark:bg-dark-blue mt-10 shadow-2xl min-h-[20rem] min-w-[98%]">
-           <div className="news-header">
-                <h2 className="news-title">NFT Collection</h2>
-            </div>
-            <div className="h-[20rem] overflow-y-auto px-4 mt-6">
+        <div className="flex h-full w-full flex-col items-center justify-center">
+            <div className="mt-6 h-[20rem] overflow-y-auto px-4">
                 <div className="overflow-y-auto">
                     {nfts.map((nft) => (
-                        <ListItem
-                            image={nft.image}
-                            name={nft.name}
-                        />
+                        <ListItem image={nft.image} name={nft.name} />
                     ))}
                 </div>
             </div>

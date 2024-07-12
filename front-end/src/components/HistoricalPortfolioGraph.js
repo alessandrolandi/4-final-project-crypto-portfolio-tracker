@@ -6,11 +6,14 @@ import {
     YAxis,
     CartesianGrid,
     ResponsiveContainer,
+    Tooltip,
+    Legend
 } from 'recharts'
 
-const HistoricalPortfolioGraph = ({ username, range }) => {
+const HistoricalPortfolioGraph = ({ range }) => {
     const [historicalData, setHistoricalData] = useState([])
 
+    //handle range change
     useEffect(() => {
         generateData()
     }, [range])
@@ -45,19 +48,19 @@ const HistoricalPortfolioGraph = ({ username, range }) => {
         }
     }
 
+
     return (
-        <ResponsiveContainer width="100%" height={250}>
+        <ResponsiveContainer width="100%" height={200}>
             <LineChart
                 data={historicalData}
                 margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
             >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
                 <YAxis domain={['auto', 'auto']} />
+                <Tooltip />
                 <Line
                     type="monotone"
                     dataKey="totalWorth"
-                    stroke="#8884d8"
+                    stroke="#FFFFFF"
                     dot={false}
                 />
             </LineChart>
